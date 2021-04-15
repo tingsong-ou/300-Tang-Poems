@@ -1,0 +1,45 @@
+html{
+    text-align: center;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    background-color: rgb(238, 231, 223);
+}
+
+
+
+
+
+
+.timelineRects{
+    stroke: black
+}
+
+.yearTag{
+    text-anchor: middle;
+    font-size: 13px;
+}
+
+.calloutMark{
+    stroke: red;
+    stroke-width: 3px;
+}
+
+.calloutLine{
+    stroke: red;
+}
+
+.periodLabel{
+    font-size: 13px;
+    text-anchor: middle;
+}
+
+.typesBar{
+    fill:rgba(255, 255, 255, 0.1);
+    stroke: black;
+}
+
+.typesLabel{
+    font-size: 13px;
+}
