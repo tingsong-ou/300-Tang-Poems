@@ -91,7 +91,6 @@ let timeline = function(){
             .attr('y', this._ypos)
             .attr('width', d => this._xScale(+d.end)- this._xScale(+d.start))
             .attr('height', 0)
-            .attr('fill', 'none')
             .transition()
             .duration(this._delay)
             .delay(this._delay * 2)

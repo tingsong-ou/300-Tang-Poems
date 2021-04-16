@@ -15,7 +15,8 @@ html{
 
 
 .timelineRects{
-    stroke: black
+    stroke: black;
+    fill: rgba(255, 255, 255, 0.482);
 }
 
 .yearTag{
@@ -39,13 +40,13 @@ html{
 
 #typesPieChart{
     display:grid;
-    grid-template-columns: 65% 35%;
+    grid-template-columns: 70% 30%;
     grid-template-rows: auto;
     grid-template-areas: "chart sticker";
 }
 
 .typesBar{
-    fill:rgba(255, 255, 255, 0.1);
+    fill:rgba(255, 255, 255, 0.461);
     stroke: black;
 }
 
@@ -60,9 +61,9 @@ html{
 
 .typesSticker{
     padding-top: 60px;
+    padding-right: 40px;
     grid-area: sticker;
 }
-
 
 
 #poetsChart{
@@ -74,4 +75,28 @@ html{
 
 .poetsIntro{
     grid-area: intro;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 180px;
+    padding-bottom: auto;
+}
+
+.poetsRect{
+    fill: rgba(255, 255, 255, 0.386);
+    stroke: black;
+}
+
+.poetsName{
+    font-size: 11px;
+    fill:rgb(60, 60, 60)
+}
+
+.tick line{
+    stroke-dasharray: 6 4;
+    opacity: 0.3
+}
+
+.tick text{
+    font-size: 12px;
+    transform: translate(0, -3px)
 }

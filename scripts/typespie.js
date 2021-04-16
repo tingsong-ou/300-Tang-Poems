@@ -96,7 +96,10 @@ let typesPie = function(){
             .data(this._data)
             .join('text')
             .classed('typesLabel', true)
-            .attr('x', 260)
+            .attr('x', d => {
+                if (this._size.w > 800) return 275;
+                return 250;
+            })
             .attr('y', d => textPos(d[0]))
             .text(d => d[0] + ' - ' + d[1]);
     

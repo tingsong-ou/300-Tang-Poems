@@ -21,8 +21,10 @@ const typesG = d3.select('#typesPieChart')
     .attr('height', p_size.h)
 
 //Variables for poets list
-const l_height = '100vh';
+let l_height = window.innerHeight;
+if (l_height < 550) l_height = 550;
 const l_size = {w:width * 0.65, h:l_height};
+const l_margin = {l: 50, t: 50, r: 30, b: 20};
 
 const poetsG = d3.select('#poetsChart')
     .append('svg')
@@ -82,5 +84,13 @@ Promise.all([
     pieChart.selection(typesG)
         .data(poems)
         .size(p_size)
+        .draw();
+    
+    //CREATING POETS LIST
+    let poetsChart = new poetsList();
+    poetsChart.selection(poetsG)
+        .data(poets)
+        .margin(l_margin)
+        .size(l_size)
         .draw();
 });
