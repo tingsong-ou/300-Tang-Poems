@@ -40,6 +40,21 @@ html{
     stroke: black;
 }
 
+.typesBarText{
+    text-anchor: middle;
+}
+
 .typesLabel{
     font-size: 13px;
+}
+
+#typesPieChart{
+    display: flex;
+}
+
+.typesTooltip{
+    display:flex;
+    margin-right: 150px;
+    margin-top: 100px;
+    background-color: rgba(255, 255, 255, 0.74);
 }

@@ -129,7 +129,7 @@ let timeline = function(){
     this.periodLabel = function(){
         let yoffset = 5;
         let labelList = [];
-        console.log(this._data)
+        //console.log(this._data)
         if (this._data[0].period) labelList = this._data.map(d => d.period);
         else {
             labelList = this._data.map(d => d.emperorEn.split(' ')[1] + ' ' + d.emperorCh);
