@@ -13,12 +13,21 @@ const timelineG = d3.select('#timelineChart')
 
 //Variables for pie chart
 const p_height = 500;
-const p_size = {w:width, h:p_height}
+const p_size = {w:width * 0.65, h:p_height}
 
 const typesG = d3.select('#typesPieChart')
     .append('svg')
     .attr('width', p_size.w)
     .attr('height', p_size.h)
+
+//Variables for poets list
+const l_height = '100vh';
+const l_size = {w:width * 0.65, h:l_height};
+
+const poetsG = d3.select('#poetsChart')
+    .append('svg')
+    .attr('width', l_size.w)
+    .attr('height', l_size.h)
 
 Promise.all([
     d3.csv('data/timeline-world.csv'),

@@ -74,7 +74,7 @@ let typesPie = function(){
             .padRadius(this._innerRadius);
         
         let canvas = this._selection.append('g')
-            .attr('transform', `translate(${this._size.w/4}, ${this._size.h/2})`);
+            .attr('transform', `translate(${this._size.w/3.5}, ${this._size.h/2})`);
 
         let bars = canvas.append('g')
             .selectAll('g')
@@ -96,13 +96,13 @@ let typesPie = function(){
             .data(this._data)
             .join('text')
             .classed('typesLabel', true)
-            .attr('x', 250)
+            .attr('x', 260)
             .attr('y', d => textPos(d[0]))
             .text(d => d[0] + ' - ' + d[1]);
     
         this.pieHover();
         this.textHover();
-        this.typesTooltip();
+        this.sticker();
     }
 
     this.groupData = function(){
@@ -136,6 +136,9 @@ let typesPie = function(){
                 .style('font-size', d => {
                     if(d[0] == value) return '15px';
                 })
+            
+            d3.select('.typesSticker')
+                .html(`<h3>${value}:</h3><p>test test test test test test test test test test test test test test test test test test test test test </p>`)
         });
     }
 
@@ -143,7 +146,7 @@ let typesPie = function(){
         d3.selectAll('.typesLabel').on('mouseover', function(e){
 
             d3.selectAll('.typesLabel').style('font-weight', 100).style('font-size', '13px');
-            d3.select(this).style('font-weight', 800).style('font-size', '15px');
+            d3.select(this).style('font-weight', 800).style('font-size', '14px');
 
             let value = d3.select(this).data()[0][0];
             d3.selectAll('.typesBar')
@@ -156,16 +159,16 @@ let typesPie = function(){
                     if(d[0] == value) return 800;
                 })
                 .style('font-size', d => {
-                    if(d[0] == value) return '15px';
+                    if(d[0] == value) return '14px';
                 })
+            
+            d3.select('.typesSticker')
+                .html(`<h3>${value}:</h3><p>test test test test test test test test test test test test test test test test test test test test test </p>`)
         })
     }
 
-    this.typesTooltip = function(){
-        tooltip = d3.select('div#typesPieChart')
-            .append('div')
-            .classed('typesTooltip', true)
-            .style('width', '500px')
-            .style('height', '350px');
+    this.sticker = function(){
+        d3.select('.typesSticker')
+            .html('<h3>Type Name:</h3><p>test test test test test test test test test test test test test test test test test test test test test </p>')
     }
 } 
