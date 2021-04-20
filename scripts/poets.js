@@ -38,8 +38,6 @@ let poetsList = function(){
 
     this.draw = function(){
         let [range, poets] = this.dataProcess();
-        // console.log(this._size)
-        // console.log(this._margin)
         this._canvasSize = {w: this._size.w - this._margin.l - this._margin.r,
             h: this._size.h - this._margin.t - this._margin.b};
         
@@ -96,10 +94,10 @@ let poetsList = function(){
     }
 
     this.dataProcess = function(){
-        console.log(this._data);
+        //console.log(this._data);
         this._data.sort((a, b) => a.born - b.born)
         let min = d3.min(this._data.map(d => +d.born)) - 5
-        let max = d3.max(this._data.map(d => +d.death)) + 20
+        let max = d3.max(this._data.map(d => +d.death)) + 25
         let range = [min, max];
         let names = this._data.map(d => d.poetEn);
         return [range, names]
@@ -136,14 +134,16 @@ let poetsList = function(){
                 });
             
             let html;
-            if(data.img == 1) html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/${data.poetEn}.jpeg" height="250px"><h3>${data.born} - ${data.death}</h3>
+            if(data.img == 1) html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/${data.poetEn}.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
             <p>${data.introduction}</p><p>Link: <a href="${data.link}">${data.link}</a></p>`;
-            else html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><p>NO IMAGE</p><h3>${data.born} - ${data.death}</h3>
+            else html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/noImage.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
             <p>${data.introduction}</p><p>Link: <a href="${data.link}">${data.link}</a></p>`
             
-            d3.select('.poetsIntro')
+            d3.select('.poetsIntro #info')
                 .html(html);
+
+            //Waiting to add rectangle(barchart) function here
         })
     }
-
 }
+

@@ -31,6 +31,18 @@ const poetsG = d3.select('#poetsChart')
     .attr('width', l_size.w)
     .attr('height', l_size.h)
 
+//Variables for the poem show room
+const s_height = 600;
+const s_width = 600;
+const s_size = {w: s_width, h: s_height};
+const s_margin = {l: 10, t: 10, r: 10, b: 10};
+
+const poemsG = d3.select('#poemsShowRoom')
+    .append('svg')
+    .attr('width', s_size.w)
+    .attr('height', s_size.h)
+
+
 Promise.all([
     d3.csv('data/timeline-world.csv'),
     d3.csv('data/timeline-tang.csv'),
@@ -93,4 +105,19 @@ Promise.all([
         .margin(l_margin)
         .size(l_size)
         .draw();
+
+    let poemSel = new poemSelector();
+
+    poemSel.selection(poemsG)
+        .size(s_size)
+        .data(poems)
+        .draw();
+
+    //initializeIntros([0]);
+
+
+    function initializeIntros(data) {
+        let input = data;
+        //console.log(input)
+    }
 });
