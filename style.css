@@ -102,3 +102,12 @@ p{
     font-size: 12px;
     transform: translate(0, -3px)
 }
+
+.branchLine{
+    stroke:rgb(155, 155, 155);
+    stroke-dasharray: 5 2;
+}
+
+.poemLine{
+    stroke-dasharray: 5 2;
+}
