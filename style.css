@@ -9,6 +9,9 @@ html{
     background-color: rgb(238, 231, 223);
 }
 
+h2{
+    margin-top: 50px;
+}
 
 p{
     font-size: 15px;
@@ -79,7 +82,7 @@ p{
     grid-area: intro;
     padding-left: 40px;
     padding-right: 40px;
-    padding-top: 150px;
+    padding-top: 120px;
     padding-bottom: auto;
 }
 

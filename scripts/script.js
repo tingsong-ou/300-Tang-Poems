@@ -31,11 +31,24 @@ const poetsG = d3.select('#poetsChart')
     .attr('width', l_size.w)
     .attr('height', l_size.h)
 
+//Variables for poet bar chart
+let b_height = 220;
+let b_width = document.querySelector('#info').clientWidth;
+const b_size = {w: b_width, h: b_height};
+const b_margin = {l: 20, t: 20, r: 20, b: 20};
+const b_dispatch = d3.dispatch('updateBars');
+
+const poetBarsG = d3.select('#poetBars')
+    .append('svg')
+    .attr('width', b_width)
+    .attr('height', b_height);
+
 //Variables for the poem show room
-const s_height = 600;
-const s_width = 600;
+const s_height = 500;
+const s_width = 500;
 const s_size = {w: s_width, h: s_height};
 const s_margin = {l: 10, t: 10, r: 10, b: 10};
+const s_dispatch = d3.dispatch('updateChart')
 
 const poemsG = d3.select('#poemsShowRoom')
     .append('svg')
@@ -58,7 +71,12 @@ Promise.all([
     poems.forEach(d => {
         d.categoryEn = d.categoryEn.trim();
         d.categoryCh = d.categoryCh.trim();
+        d.poetCh = d.poetCh.trim();
+        d.poetEn = d.poetEn.trim();
     });
+
+    updateMenu(poems);
+
 
     //CREATING TIMELINE CHART
     //REFER TO timeline.js
@@ -106,18 +124,52 @@ Promise.all([
         .size(l_size)
         .draw();
 
+    //INITIALIZING POET BARS
+    let poetWorkTypes = new poetBar();
+
+    poetWorkTypes.selection(poetBarsG)
+        .data(poems)
+        .margin(b_margin)
+        .size(b_size)
+        .dispatch(b_dispatch);
+        //.draw();
+
+    //CREATING POEM FILTER
+
     let poemSel = new poemSelector();
 
     poemSel.selection(poemsG)
         .size(s_size)
         .data(poems)
+        .dispatch(s_dispatch)
         .draw();
 
-    //initializeIntros([0]);
 
-
-    function initializeIntros(data) {
-        let input = data;
-        //console.log(input)
-    }
+    //Updating menu
+    d3.select('#options').on('change', function(){
+        let value = d3.select(this).property('value')
+        s_dispatch.call('updateChart', this, value);
+    })
 });
+
+//------------------
+
+function updateMenu(data, mode='types'){
+    let list = [];
+
+    if(mode == 'types'){
+        list = Array.from(new Set(data.map(d => d.categoryEn + ' - ' + d.categoryCh)));
+        console.log()
+    }
+
+    let options = d3.select('#options');
+    options.selectAll('.items')
+        .data(list)
+        .join('option')
+        .classed('items', true)
+        .text(d => d)
+        .attr('value', d => d.split(' - ')[0])
+        .property('selected', d => {
+            if(d == list[0]) return d
+        })
+}
