@@ -36,11 +36,11 @@ let poemSelector = function(){
         if(arguments.length > 0){
             this._dispatch = arguments[0];
             
-            this._dispatch.on('updateChart', value => {
-                this.processData();
+            this._dispatch.on('updateChart', (value, mode) => {
+                this.processData(mode);
                 filteredData = filteredData.filter(d => d[0] == value)[0];
                 canvas.selectAll('.leave').remove()
-                this.draw();
+                this.draw(mode);
             })
             
             return this;
@@ -49,7 +49,7 @@ let poemSelector = function(){
 
 
     //---------------------
-    this.draw = function(){
+    this.draw = function(mode = 'types'){
         if(!filteredData){
             this.processData();
             filteredData = filteredData[0];
@@ -62,11 +62,13 @@ let poemSelector = function(){
 
         let core = [filteredData[0], filteredData[1]];
 
-        let branchData = Array.from(d3.group(filteredData[2], d => d.poetEn));
+        let branchData;
+        if(mode == 'types') branchData = Array.from(d3.group(filteredData[2], d => d.poetEn));
+        else if(mode == 'poets') branchData = Array.from(d3.group(filteredData[2], d => d.categoryEn));
         
         xScale = d3.scaleBand()
             .domain(branchData.map(d => d[0]))
-            .range([-Math.PI/2, 1.5 * Math.PI]);
+            .range([0, 2 * Math.PI]);
         
         yScale = d3.scaleSqrt()
             .domain(d3.extent(branchData, d => d[1].length))
@@ -114,7 +116,11 @@ let poemSelector = function(){
                 d.splice(1, 0, categoryCh)
             })
         } else if (mode == 'poets'){
-            filteredData = Array.from(d3.group(this.data, d => d.poetEn))
+            filteredData = Array.from(d3.group(this._data, d => d.poetEn));
+            filteredData.forEach(d => {
+                let poetCh = d[1][0].poetCh;
+                d.splice(1, 0, poetCh);
+            })
         }
     }
 
@@ -127,8 +133,6 @@ let poemSelector = function(){
             let radians = xScale(leafData[0]);
             let leaveNum = leafData[1].length;
             let offRange = [];
-
-            //console.log(leafData)
 
             d3.selectAll('.branchCircle')
                 .attr('stroke-width', d => {
@@ -194,7 +198,7 @@ let poemSelector = function(){
                 .attr('stroke-width', 1)
 
                 let circle = d3.select(this);
-
+                console.log(circle.data()[0])
                 circle.attr('stroke-width', 3)
             });
             

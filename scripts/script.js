@@ -35,7 +35,7 @@ const poetsG = d3.select('#poetsChart')
 let b_height = 220;
 let b_width = document.querySelector('#info').clientWidth;
 const b_size = {w: b_width, h: b_height};
-const b_margin = {l: 20, t: 20, r: 20, b: 20};
+const b_margin = {l: 40, t: 20, r: 40, b: 20};
 const b_dispatch = d3.dispatch('updateBars');
 
 const poetBarsG = d3.select('#poetBars')
@@ -74,8 +74,6 @@ Promise.all([
         d.poetCh = d.poetCh.trim();
         d.poetEn = d.poetEn.trim();
     });
-
-    updateMenu(poems);
 
 
     //CREATING TIMELINE CHART
@@ -135,7 +133,8 @@ Promise.all([
         //.draw();
 
     //CREATING POEM FILTER
-
+    let mode = 'types';
+    updateMenu(poems);
     let poemSel = new poemSelector();
 
     poemSel.selection(poemsG)
@@ -148,8 +147,25 @@ Promise.all([
     //Updating menu
     d3.select('#options').on('change', function(){
         let value = d3.select(this).property('value')
-        s_dispatch.call('updateChart', this, value);
+        s_dispatch.call('updateChart', this, value, mode);
     })
+
+    d3.selectAll('.mode').on('click', function(){
+        d3.selectAll('.active').classed('active', false);
+        let active = d3.select(this);
+        active.classed('active', true);
+        mode = active.property('value');
+
+        updateMenu(poems, mode);
+
+        //get the first value of the updated menu
+
+        let opts = document.getElementById('options');
+        let value = opts.options[opts.selectedIndex].value;
+
+        s_dispatch.call('updateChart', this, value, mode);
+    })
+
 });
 
 //------------------
@@ -159,7 +175,8 @@ function updateMenu(data, mode='types'){
 
     if(mode == 'types'){
         list = Array.from(new Set(data.map(d => d.categoryEn + ' - ' + d.categoryCh)));
-        console.log()
+    } else {
+        list = Array.from(new Set(data.map(d => d.poetEn + ' - ' + d.poetCh)))
     }
 
     let options = d3.select('#options');

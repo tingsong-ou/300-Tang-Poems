@@ -62,7 +62,7 @@ let poetBar = function(){
                 .attr('transform', `translate(${this._size.w/2}, ${this._margin.t})`)
         }
         
-        let poemByType = Array.from(d3.group(filteredData, d => d.categoryCh));
+        let poemByType = Array.from(d3.group(filteredData, d => d.categoryEn));
         
         let totalHeight = bandWidth * poemByType.length;
 
@@ -75,17 +75,45 @@ let poetBar = function(){
             .domain([0, d3.max(poemByType, d => d[1].length)])
             .range([0, canvasSize.w/2])
 
-        canvas.selectAll('.typeBars')
+        canvas.selectAll('.typesBar')
             .data(poemByType)
             .join('rect')
-            .classed('typeBars', true)
+            .classed('typesBar', true)
             .attr('x', 0)
             .attr('y', (d, i) => yScale(i))
             .attr('width', 0)
             .attr('height', yScale.bandwidth())
-            .attr('fill', 'steelblue')
+            .attr('stroke', 'black')
             .transition()
             .duration(200)
-            .attr('width', d => xScale(d[1].length))
+            .attr('width', d => xScale(d[1].length));
+        
+        canvas.selectAll('.typesBarText')
+            .data(poemByType)
+            .join('text')
+            .classed('typesBarText', true)
+            .attr('x', d => xScale(d[1].length) + 8)
+            .attr('y', (d, i) => yScale(i) + yScale.bandwidth())
+            .text(d => d[1].length)
+            .attr('opacity', 0.0)
+            .attr('font-size', '10px')
+            .transition()
+            .duration(400)
+            .attr('opacity', 1.0);
+        
+        canvas.selectAll('.barLabel')
+            .data(poemByType)
+            .join('text')
+            .classed('barLabel', true)
+            .attr('x', -6)
+            .attr('y', (d, i) => yScale(i) + yScale.bandwidth()/2)
+            .text(d => d[0])
+            .attr('opacity', 0.0)
+            .attr('font-size', '11px')
+            .attr('text-anchor', 'end')
+            .attr('dominant-baseline', 'middle')
+            .transition()
+            .duration(400)
+            .attr('opacity', 1.0);
     }
 }

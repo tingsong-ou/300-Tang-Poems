@@ -2,7 +2,7 @@ let typesPie = function(){
     this._data = null;
     this._selection = null;
     this._innerRadius = 45;
-    this._outerRadius = 250;
+    this._outerRadius = 220;
     this._size = null;
     this._colorScale = null;
     let canvas = null;
@@ -63,14 +63,12 @@ let typesPie = function(){
             .domain(this._data.map(d => d[0]))
             .range([-10, 220]);
         
-        //console.log(textPos.range());
-        
         let arc = d3.arc()
             .innerRadius(d => yScale(0))
             .outerRadius(d => yScale(d[2].length))
             .startAngle(d => xScale(d[0]))
             .endAngle(d => xScale(d[0]) + xScale.bandwidth())
-            .padAngle(0.07)
+            .padAngle(0.09)
             .padRadius(this._innerRadius);
         
         let canvas = this._selection.append('g')
