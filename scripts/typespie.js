@@ -1,4 +1,8 @@
+//Visualization for Section 2; TYPES CHART
+
 let typesPie = function(){
+
+    //--------PROPERTIES--------
     this._data = null;
     this._selection = null;
     this._innerRadius = 45;
@@ -8,7 +12,7 @@ let typesPie = function(){
     let canvas = null;
     let tooltip = null;
 
-    //SETTERS
+    //--------SETTERS--------
     this.data = function(){
         if(arguments.length > 0){
             this._data = arguments[0];
@@ -44,16 +48,17 @@ let typesPie = function(){
         } else return this._size;
     }
 
-    //FUNCTIONS
+    //--------FUNCTIONS--------
 
+    //creating visualization
     this.draw = function(){
+        
+        //processing data
         this.groupData();
 
         let xScale = d3.scaleBand()
             .domain(this._data.map(d => d[0]))
             .range([0, Math.PI * 2]);
-        
-        //console.log(xScale.domain())
 
         let yScale = d3.scaleRadial()
             .domain([0, d3.max(this._data.map(d => d[2].length))])
@@ -106,6 +111,7 @@ let typesPie = function(){
         this.sticker();
     }
 
+    //processing data
     this.groupData = function(){
         let group = d3.group(this._data, d=>d.categoryEn)
         group = Array.from(group);
@@ -113,15 +119,15 @@ let typesPie = function(){
         this._data = group;
     }
 
+    //interactive(pie hover) function
     this.pieHover = function(){
         d3.selectAll('.typesBar').on('mouseover', function(e){
 
             d3.selectAll('.typesBar').attr('stroke-width', 1);
-
             d3.select(this).attr('stroke-width', 2);
 
             let value = d3.select(this).data()[0][0];
-            
+
             d3.selectAll('.typesLabel')
                 .style('font-weight', d => {
                     if(d[0] == value) return 800;
@@ -143,6 +149,7 @@ let typesPie = function(){
         });
     }
 
+    //interactive(text hover) function
     this.textHover = function(){
         d3.selectAll('.typesLabel').on('mouseover', function(e){
 
@@ -168,6 +175,7 @@ let typesPie = function(){
         })
     }
 
+    //types introduction function
     this.sticker = function(){
         d3.select('.typesSticker')
             .html('<h3>Type Name:</h3><p>test test test test test test test test test test test test test test test test test test test test test </p>')

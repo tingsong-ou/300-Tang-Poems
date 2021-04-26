@@ -1,6 +1,8 @@
+//Visualization for Section 1; TIMELINE CHART
+
 let timeline = function(){
 
-    //Declaring variables
+    //--------PROPERTIES--------
     this._selection = null;
     this._size = null;
     this._margin = null;
@@ -9,10 +11,12 @@ let timeline = function(){
     this._colorScale = null;
     this._xScale = null;
     this._barHeight = null;
+    this._dispatch = null;
     this._delay = 0;
+
     let canvas = null;
 
-    //Setters
+    //--------SETTERS--------
     this.selection = function(){
         if(arguments.length > 0){
             this._selection = arguments[0];
@@ -71,19 +75,33 @@ let timeline = function(){
         } else return this._delay;
     }
 
-    //functions
+    this.dispatch = function(){
+        if(arguments.length > 0){
+            this._dispatch = arguments[0];
+
+            this._dispatch.on('expandBars', () => {
+                this.draw();
+            })
+
+            return this;
+        } else return this._dispatch;
+    }
+
+    //--------FUNCTIONS--------
+
+    //creating visualization
     this.draw = function(){
+
         this._xScale = d3.scaleLinear()
             .domain([d3.min(this._data.map(d => +d.start)), d3.max(this._data.map(d => +d.end))])
             .range([0, this._size.w]);
 
-        canvas = this._selection.append('g')
+        canvas = this._selection.selectAll('g')
+            .data([0])
+            .join('g')
             .attr('transform',`translate(${this._margin.l}, ${this._margin.t})`);
 
-        let rects = canvas.append('g')
-
-        rects
-            .selectAll('.timelineRects')
+        let rects = canvas.selectAll('.timelineRects')
             .data(this._data)
             .join('rect')
             .classed('timelineRects', true)
@@ -128,7 +146,7 @@ let timeline = function(){
     this.periodLabel = function(){
         let yoffset = 5;
         let labelList = [];
-        //console.log(this._data)
+
         if (this._data[0].period) labelList = this._data.map(d => d.period);
         else {
             labelList = this._data.map(d => d.emperorEn.split(' ')[1] + ' ' + d.emperorCh);
@@ -164,7 +182,15 @@ let timeline = function(){
     }
 }
 
+
+/*-------------------------------------------------------*/
+
+
+//CALLOUT MARK (OBJECT) FOR TIMELINE CHART
+
 let calloutMark = function(){
+
+    //--------PROPERTIES--------
     this._sourceData = null;
     this._targetData = null;
     this._selection = null;
@@ -172,7 +198,9 @@ let calloutMark = function(){
     this._size = null;
     this._ypos = null;
     this._barHeight = null;
+    this._dispatch = null;
 
+    //--------SETTERS--------
     this.sourceData = function(){
         if(arguments.length > 0){
             this._sourceData = arguments[0];
@@ -224,6 +252,21 @@ let calloutMark = function(){
         } else return this._barHeight;
     }
 
+    this.dispatch = function(){
+        if(arguments.length > 0){
+            this._dispatch = arguments[0];
+
+            this._dispatch.on('expandMarks', () =>{
+                this.draw();
+            })
+
+            return this;
+        } else return this._dispatch;
+    }
+
+    //--------FUNCTIONS-------
+
+    //creating visualization
     this.draw = function(){
         let sourceScale = d3.scaleLinear()
             .domain([d3.min(this._sourceData.map(d => +d.start)), d3.max(this._sourceData.map(d => +d.end))])
@@ -233,10 +276,13 @@ let calloutMark = function(){
             .domain([d3.min(this._targetData.map(d => +d.start)), d3.max(this._targetData.map(d => +d.end))])
             .range([0, this._size.w]);
         
-        let canvas = this._selection.append('g')
+        let canvas = this._selection.selectAll('.g-callout')
+            .data([0])
+            .join('g')
+            .classed('g-callout', true)
             .attr('transform',`translate(${this._margin.l}, ${this._margin.t})`);
         
-        //drawing marks
+        //placing marks
         let marks = canvas.selectAll('.calloutMark')
             .data(targetScale.domain());
         
@@ -251,6 +297,7 @@ let calloutMark = function(){
             .duration(500)
             .attr('opacity', 1.0);
 
+        //placing callout line
         let calloutLine = canvas.selectAll('.calloutLine')
             .data(targetScale.domain());
         
@@ -270,6 +317,6 @@ let calloutMark = function(){
             })
             .transition()
             .duration(0)
-            .attr('stroke-dasharray', '12 5')
+            .attr('stroke-dasharray', '12 5');
     }
 }

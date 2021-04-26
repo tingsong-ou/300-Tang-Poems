@@ -1,8 +1,11 @@
-//Variables for timelines
+//Animation trigger
+const aniDispatch = d3.dispatch('expandBars', 'expandMarks', 'expandPoets');
+
+//Variables for timeline chart (Section 1)
 const width = document.querySelector('#timelineChart').clientWidth;
 const t_height = 280;
-const t_size = {w: width, h:t_height}
-const margin = {l: 100, t: 30, r: 100, b: 10}
+const t_size = {w: width, h:t_height};
+const margin = {l: 100, t: 30, r: 100, b: 10};
 const yPos = [20, 180];
 const barHeight = 15;
 const timelineG = d3.select('#timelineChart')
@@ -11,16 +14,17 @@ const timelineG = d3.select('#timelineChart')
     .attr('height', t_size.h);
 
 
-//Variables for pie chart
+//Variables for pie chart (Section 2)
 const p_height = 500;
-const p_size = {w:width * 0.65, h:p_height}
+const p_size = {w:width * 0.65, h:p_height};
 
 const typesG = d3.select('#typesPieChart')
     .append('svg')
     .attr('width', p_size.w)
-    .attr('height', p_size.h)
+    .attr('height', p_size.h);
 
-//Variables for poets list
+
+//Variables for poets list (Section 3, major)
 let l_height = window.innerHeight;
 if (l_height < 550) l_height = 550;
 const l_size = {w:width * 0.65, h:l_height};
@@ -29,9 +33,10 @@ const l_margin = {l: 50, t: 50, r: 30, b: 20};
 const poetsG = d3.select('#poetsChart')
     .append('svg')
     .attr('width', l_size.w)
-    .attr('height', l_size.h)
+    .attr('height', l_size.h);
 
-//Variables for poet bar chart
+
+//Variables for poet bar chart (Section 3, intro bar)
 let b_height = 220;
 let b_width = document.querySelector('#info').clientWidth;
 const b_size = {w: b_width, h: b_height};
@@ -43,18 +48,21 @@ const poetBarsG = d3.select('#poetBars')
     .attr('width', b_width)
     .attr('height', b_height);
 
-//Variables for the poem show room
-const s_height = 500;
-const s_width = 500;
+
+//Variables for the poem show room (Section 4, poem selector)
+const s_height = 450;
+const s_width = 450;
 const s_size = {w: s_width, h: s_height};
 const s_margin = {l: 10, t: 10, r: 10, b: 10};
-const s_dispatch = d3.dispatch('updateChart')
+const s_dispatch = d3.dispatch('updateChart');
 
-const poemsG = d3.select('#poemsShowRoom')
+const poemsG = d3.select('#selGraph')
     .append('svg')
     .attr('width', s_size.w)
-    .attr('height', s_size.h)
+    .attr('height', s_size.h);
 
+
+//--------VISUALIZATION--------
 
 Promise.all([
     d3.csv('data/timeline-world.csv'),
@@ -76,10 +84,11 @@ Promise.all([
     });
 
 
-    //CREATING TIMELINE CHART
-    //REFER TO timeline.js
+    //CREATING TIMELINE CHART (SECTION 1)
+    //REFER TO script/timeline.js
     let worldTimeline = new timeline();
-    worldTimeline.selection(timelineG)
+    let timelineWorld = timelineG.append('g');
+    worldTimeline.selection(timelineWorld)
         .data(world)
         .margin(margin)
         .size(t_size)
@@ -88,41 +97,47 @@ Promise.all([
         .draw();
 
     let tangTimeline = new timeline();
-    tangTimeline.selection(timelineG)
+    let timelineTang = timelineG.append('g');
+    tangTimeline.selection(timelineTang)
         .data(tang)
         .margin(margin)
         .size(t_size)
         .ypos(yPos[1])
         .barHeight(barHeight)
         .delay(500)
-        .draw();
+        .dispatch(aniDispatch);
 
     let callout = new calloutMark();
-    callout.selection(timelineG)
+    let timelineCallout = timelineG.append('g');
+    callout.selection(timelineCallout)
         .sourceData(world)
         .targetData(tang)
         .margin(margin)
         .size(t_size)
         .ypos(yPos)
         .barHeight(barHeight)
-        .draw()
+        .dispatch(aniDispatch);
 
-    //CREATING POEM TYPES PIE CHART
+
+    //CREATING POEM TYPES PIE CHART (SECTION 2)
+    //REFER TO script/typespie.js
     let pieChart = new typesPie();
     pieChart.selection(typesG)
         .data(poems)
         .size(p_size)
         .draw();
     
-    //CREATING POETS LIST
+    
+    //CREATING POETS LIST (SECTION 3)
+    //REFER TO script/poets.js
     let poetsChart = new poetsList();
     poetsChart.selection(poetsG)
         .data(poets)
         .margin(l_margin)
         .size(l_size)
+        .dispatch(aniDispatch)
         .draw();
 
-    //INITIALIZING POET BARS
     let poetWorkTypes = new poetBar();
 
     poetWorkTypes.selection(poetBarsG)
@@ -130,9 +145,10 @@ Promise.all([
         .margin(b_margin)
         .size(b_size)
         .dispatch(b_dispatch);
-        //.draw();
 
-    //CREATING POEM FILTER
+
+    //CREATING POEM SELECTOR (SECTION 4)
+    //REFER TO script/poems.js
     let mode = 'types';
     updateMenu(poems);
     let poemSel = new poemSelector();
@@ -143,22 +159,22 @@ Promise.all([
         .dispatch(s_dispatch)
         .draw();
 
-
-    //Updating menu
+    
+    //UPDATING POEMS BY DROPDOWN MENU
     d3.select('#options').on('change', function(){
         let value = d3.select(this).property('value')
         s_dispatch.call('updateChart', this, value, mode);
     })
 
     d3.selectAll('.mode').on('click', function(){
+
         d3.selectAll('.active').classed('active', false);
+        
         let active = d3.select(this);
         active.classed('active', true);
         mode = active.property('value');
 
         updateMenu(poems, mode);
-
-        //get the first value of the updated menu
 
         let opts = document.getElementById('options');
         let value = opts.options[opts.selectedIndex].value;
@@ -166,17 +182,24 @@ Promise.all([
         s_dispatch.call('updateChart', this, value, mode);
     })
 
+
+    //INITIALIZING SCROLL TRIGGER
+    let aniTrigger = new ScrollActions();
+    aniTrigger.dispatch(aniDispatch);
+    aniTrigger.trigger();
+
 });
 
-//------------------
+//--------FUNCTION--------
 
+//UPDATING DROPDOWN MENU
 function updateMenu(data, mode='types'){
     let list = [];
 
     if(mode == 'types'){
         list = Array.from(new Set(data.map(d => d.categoryEn + ' - ' + d.categoryCh)));
     } else {
-        list = Array.from(new Set(data.map(d => d.poetEn + ' - ' + d.poetCh)))
+        list = Array.from(new Set(data.map(d => d.poetEn + ' - ' + d.poetCh)));
     }
 
     let options = d3.select('#options');
@@ -188,5 +211,5 @@ function updateMenu(data, mode='types'){
         .attr('value', d => d.split(' - ')[0])
         .property('selected', d => {
             if(d == list[0]) return d
-        })
+        });
 }

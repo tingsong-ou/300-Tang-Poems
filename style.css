@@ -130,6 +130,50 @@ button{
     stroke-dasharray: 5 2;
 }
 
+#poemsShowRoom{
+    display: grid;
+    grid-template-columns: 31% 38% 31%;
+    grid-template-rows: auto;
+    grid-template-areas: "graph poemCh poemEn";
+    padding-bottom: 230px;
+    column-gap: 20px;
+}
+
+#options{
+    margin-top: 5px;
+    margin-bottom: 50px;
+}
+
+option{
+    text-anchor: middle;
+}
+
 .poemLine{
     stroke-dasharray: 5 2;
+}
+
+#poemCh, #poemEn{
+    white-space: pre-wrap;
+    text-anchor: middle;
+    padding:20px
+}
+
+#poemEn{
+    border-left: dashed;
+    border-right: dashed;
+    border-width: 1px;
+}
+
+#poemCh{
+    padding-right: 30%;
+}
+
+#poemEn p{
+    font-size: 15px;
+    font-weight: 200;
+}
+
+#poemCh p{
+    font-size: 14px;
+    font-weight: 200;
 }

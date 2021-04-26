@@ -1,4 +1,8 @@
+//Visualization for Section 3; Poet's Statistics (Right Side)
+
 let poetBar = function(){
+
+    //--------PROPERTIES--------
     this._selection = null;
     this._data = null;
     this._size = null;
@@ -7,6 +11,8 @@ let poetBar = function(){
     
     let canvasSize, filteredData, canvas;
     let bandWidth = 18;
+
+    //--------SETTERS--------
 
     this.data = function(){
         if(arguments.length > 0){
@@ -49,9 +55,12 @@ let poetBar = function(){
         } else return this._dispatch;
     }
 
+    //--------FUNCTIONS--------
 
+    //creating visualization
     this.draw = function(){
 
+        //initializing canvas
         canvasSize = {
             w: this._size.w - this._margin.l - this._margin.r,
             h: this._size.h - this._margin.t - this._margin.b
@@ -62,18 +71,19 @@ let poetBar = function(){
                 .attr('transform', `translate(${this._size.w/2}, ${this._margin.t})`)
         }
         
+        //drawing bars
         let poemByType = Array.from(d3.group(filteredData, d => d.categoryEn));
         
         let totalHeight = bandWidth * poemByType.length;
+
+        let xScale = d3.scaleLinear()
+            .domain([0, d3.max(poemByType, d => d[1].length)])
+            .range([0, canvasSize.w/2])
 
         let yScale = d3.scaleBand()
             .domain(Array(poemByType.length).keys())
             .range([0, totalHeight])
             .padding(0.3)
-
-        let xScale = d3.scaleLinear()
-            .domain([0, d3.max(poemByType, d => d[1].length)])
-            .range([0, canvasSize.w/2])
 
         canvas.selectAll('.typesBar')
             .data(poemByType)

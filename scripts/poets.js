@@ -1,5 +1,8 @@
+//Visualization for Section 3; Poets List
+
 let poetsList = function(){
 
+    //--------PROPERTIES--------
     this._data = null;
     this._selection = null;
     this._size = null;
@@ -7,6 +10,9 @@ let poetsList = function(){
     this._colorScale = null;
     this._canvasSize = null;
     let canvas = null;
+    let xScale, yScale;  
+    
+    //--------SETTERS--------
 
     this.data = function(){
         if (arguments.length > 0){
@@ -36,6 +42,21 @@ let poetsList = function(){
         } else return this._margin;
     }
 
+    this.dispatch = function(){
+        if(arguments.length > 0){
+            this._dispatch = arguments[0];
+
+            this._dispatch.on('expandPoets', () => {
+                this.drawPoets();
+            })
+
+            return this;
+        } else return this._dispatch;
+    }
+
+    //--------FUNCTIONS--------
+
+    //creating visualizaton
     this.draw = function(){
         let [range, poets] = this.dataProcess();
         this._canvasSize = {w: this._size.w - this._margin.l - this._margin.r,
@@ -44,14 +65,43 @@ let poetsList = function(){
         canvas = this._selection.append('g')
             .attr('transform', `translate(${this._margin.l}, ${this._margin.t})`);
         
-        let xScale = d3.scaleLinear()
+        xScale = d3.scaleLinear()
             .domain(range)
             .range([0, this._canvasSize.w]);
 
-        let yScale = d3.scaleBand()
+        yScale = d3.scaleBand()
             .domain(poets)
             .range([10, this._canvasSize.h])
             .padding(0.25);
+
+        this.drawAxisX(xScale); //Only create axix when first loading the page
+    }
+
+    //processing data
+    this.dataProcess = function(){
+        this._data.sort((a, b) => a.born - b.born);
+        let min = d3.min(this._data.map(d => +d.born)) - 5;
+        let max = d3.max(this._data.map(d => +d.death)) + 25;
+        let range = [min, max];
+        let names = this._data.map(d => d.poetEn);
+        return [range, names]
+    }
+
+    //placing axis
+    this.drawAxisX = function(xScale){
+        let axis = d3.axisTop(xScale)
+            .tickSize(-this._canvasSize.h)
+            .tickSizeOuter(0)
+
+        let axisG = canvas.selectAll('.axisX')
+            .data([0])
+            .join('g')
+            .classed('axisX', true)
+            .call(axis);
+    }
+
+    //creating complete poet list
+    this.drawPoets = function(){
 
         let rects = canvas.selectAll('.poetsRect')
             .data(this._data);
@@ -88,33 +138,11 @@ let poetsList = function(){
             .duration(700)
             .delay((d, i) => i * 20 + 1000)
             .attr('opacity', 1.0)
-
-        this.drawAxisX(xScale);
+        
         this.rectHover();
     }
 
-    this.dataProcess = function(){
-        //console.log(this._data);
-        this._data.sort((a, b) => a.born - b.born)
-        let min = d3.min(this._data.map(d => +d.born)) - 5
-        let max = d3.max(this._data.map(d => +d.death)) + 25
-        let range = [min, max];
-        let names = this._data.map(d => d.poetEn);
-        return [range, names]
-    }
-
-    this.drawAxisX = function(xScale){
-        let axis = d3.axisTop(xScale)
-            .tickSize(-this._canvasSize.h)
-            .tickSizeOuter(0)
-
-        let axisG = canvas.selectAll('.axisX')
-            .data([0])
-            .join('g')
-            .classed('axisX', true)
-            .call(axis);
-    }
-
+    //interactive(hover) function
     this.rectHover = function(){
         d3.selectAll('.poetsRect').on('mouseover', function(e){
 
@@ -133,17 +161,17 @@ let poetsList = function(){
                     else return '11px';
                 });
             
+            //generating poet introduction
             let html;
-            if(data.img == 1) html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/${data.poetEn}.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
-            <p>${data.introduction}</p><p>Source Link: <a href="${data.link}">${data.link}</a></p>`;
-            else html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/noImage.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
-            <p>${data.introduction}</p><p>Source Link: <a href="${data.link}">${data.link}</a></p>`
-            
-            d3.select('.poetsIntro #info')
-                .html(html);
 
-            //Waiting to add rectangle(barchart) function here
-            //use dispatch here
+            if(data.img == 1) {html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/${data.poetEn}.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
+            <p>${data.introduction}</p><p>Source Link: <a href="${data.link}">${data.link}</a></p>`}
+            else {html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/noImage.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
+            <p>${data.introduction}</p><p>Source Link: <a href="${data.link}">${data.link}</a></p>`};
+            
+            d3.select('.poetsIntro #info').html(html);
+
+            //Use current data point to generate statistic barchart
             b_dispatch.call('updateBars', this, value);
         })
     }

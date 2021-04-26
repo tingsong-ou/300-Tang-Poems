@@ -1,5 +1,8 @@
+//Visualization for Section 4; Poem Selector
+
 let poemSelector = function(){
 
+    //--------PROPERTIES--------
     this._data = null;
     this._selection = null;
     this._size = null;
@@ -10,6 +13,7 @@ let poemSelector = function(){
     let yScale = null;
     let canvas = null;
 
+    //--------SETTERS--------
 
     this.data = function(){
         if (arguments.length > 0){
@@ -42,39 +46,44 @@ let poemSelector = function(){
                 canvas.selectAll('.leave').remove()
                 this.draw(mode);
             })
-            
+        
             return this;
         } else return this._dispatch;
     }
 
 
-    //---------------------
+    //--------FUNCTIONS--------
+
+    //creating visualization 
     this.draw = function(mode = 'types'){
+
+        //processing data
         if(!filteredData){
             this.processData();
             filteredData = filteredData[0];
         }
-        
+
         if(!canvas){
             canvas = this._selection.append('g')
             .attr('transform', `translate(${this._size.w/2}, ${this._size.h/2})`);
         }
 
-        let core = [filteredData[0], filteredData[1]];
-
         let branchData;
+
         if(mode == 'types') branchData = Array.from(d3.group(filteredData[2], d => d.poetEn));
         else if(mode == 'poets') branchData = Array.from(d3.group(filteredData[2], d => d.categoryEn));
         
+        //creating scales
         xScale = d3.scaleBand()
             .domain(branchData.map(d => d[0]))
             .range([0, 2 * Math.PI]);
         
         yScale = d3.scaleSqrt()
             .domain(d3.extent(branchData, d => d[1].length))
-            .range([60, 120]);
+            .range([45, 100]);
 
-        let branckLn = canvas.selectAll('.branchLine')
+        //drawing lines and circles
+        let branchLn = canvas.selectAll('.branchLine')
             .data(branchData)
             .join('line')
             .classed('branchLine', true)
@@ -104,10 +113,10 @@ let poemSelector = function(){
             .attr('cx', d => Math.cos(xScale(d[0])) * yScale(d[1].length))
             .attr('cy', d => Math.sin(xScale(d[0])) * yScale(d[1].length));
 
-
         this.branchCircleHover();
     }
 
+    //data-processing function
     this.processData = function(mode = "types"){
         if(mode == 'types'){
             filteredData = Array.from(d3.group(this._data, d => d.categoryEn));
@@ -124,11 +133,11 @@ let poemSelector = function(){
         }
     }
 
+    //interactive(hover) function
     this.branchCircleHover = function(){
         d3.selectAll('.branchCircle').on('mouseover', function(e){
 
             let leaf = d3.select(this);
-            
             let leafData = leaf.data()[0];
             let radians = xScale(leafData[0]);
             let leaveNum = leafData[1].length;
@@ -140,6 +149,7 @@ let poemSelector = function(){
                     else return 1
                 })
 
+            //controlling blossom angles
             if (leaveNum >= 5) offRange = [-Math.PI/4, Math.PI/4];
             else if (leaveNum < 5 && leaveNum > 2) offRange = [-Math.PI/6, Math.PI/6];
             else if (leaveNum == 2) offRange = [-Math.PI/8, Math.PI/8];
@@ -157,6 +167,7 @@ let poemSelector = function(){
                 .join('g')
                 .attr('transform', `translate(${xPos}, ${yPos})`);
             
+            //blossom
             leavesG
                 .classed('leave', true)
                 .call(g => {
@@ -170,8 +181,8 @@ let poemSelector = function(){
                         .attr('y2', (d, i) => yCoord(i, 7))
                         .transition()
                         .duration(300)
-                        .attr('x2', (d, i) => xCoord(i, 100))
-                        .attr('y2', (d, i) => yCoord(i, 100))
+                        .attr('x2', (d, i) => xCoord(i, 80))
+                        .attr('y2', (d, i) => yCoord(i, 80))
                         .attr('stroke', 'steelblue')
                 })
                 .call(g => {
@@ -185,23 +196,41 @@ let poemSelector = function(){
                         .transition()
                         .duration(300)
                         .attr('r', 8)
-                        .attr('cx', (d, i) => xCoord(i, 95))
-                        .attr('cy', (d, i) => yCoord(i, 95))
+                        .attr('cx', (d, i) => xCoord(i, 80))
+                        .attr('cy', (d, i) => yCoord(i, 80))
                         .attr('stroke', 'steelblue')
                         .attr('stroke-width', 1)
                         .attr('fill', 'white')
                 })
             
+            //poping up selected poems
             d3.selectAll('.poemCircle').on('mouseover', function(e){
 
                 d3.selectAll('.poemCircle')
-                .attr('stroke-width', 1)
+                    .attr('stroke-width', 1)
 
                 let circle = d3.select(this);
-                console.log(circle.data()[0])
-                circle.attr('stroke-width', 3)
+                let poemData = circle.data()[0];
+                circle.attr('stroke-width', 3);
+
+                //poem html - Chinese
+                let titleCh = `<h3>${poemData.titleCh.trim()}<h3>`;
+                let poetCh = `<p><b>${poemData.poetCh}</b></p>`;
+                let bodyCh = `<p>${poemData.ch.trim()}</p>`;
+
+                //poem html - English
+                let titleEn = `<h3>${poemData.title.trim()}<h3>`;
+                let poetEn = `<p><b>${poemData.poetEn}</b></p>`;
+                let bodyEn = `<p>${poemData.en.trim()}</p>`;
+
+                d3.select('#poemCh')
+                    .html(titleCh+poetCh+bodyCh)
+
+                d3.select('#poemEn')
+                    .html(titleEn+poetEn+bodyEn)
             });
             
+            //polar coordinate functions
             function xCoord(i, r) {
                 return Math.cos(radians + leavesScaleX(i) + leavesScaleX.bandwidth()/2) * r;
             }
