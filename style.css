@@ -9,20 +9,46 @@ html{
     min-width: 1200px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 120px;
-    background-color: rgb(238, 231, 223);
+    margin-top: 100px;
+    background-color: rgb(250, 245, 233);
     font-family: "Source Serif Pro",Iowan Old Style,Apple Garamond,Palatino Linotype,Times New Roman,"Droid Serif",Times,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
 
 h2{
+    margin-top:60px;
     padding-top: 50px;
     border-top: dashed;
     border-color: rgb(181, 181, 181);
     border-width: 1px;
 }
 
+.author{
+    color: rgb(131, 131, 131);
+    margin:0px;
+    margin-bottom: 20px;
+}
+
 p{
-    font-size: 15px;
+    font-size: 14px;
+}
+
+.paragraph{
+    padding: 20px;
+    max-width: 950px;
+    margin-left: auto;
+    margin-right: auto;
+    /* margin-bottom: 50px;
+    background-color: rgba(255, 255, 255, 0.397);
+    box-shadow: 1px 1px rgb(120, 120, 120); */
+}
+
+.paragraph p{
+    font-size: 16px;
+    text-align: left;
+}
+
+#chTitle{
+    margin-bottom: 40px;
 }
 
 a{
@@ -174,6 +200,7 @@ button{
     margin-top: 5px;
     margin-bottom: 50px;
     max-width: 500px;
+    outline: none;
 }
 
 option{
@@ -190,6 +217,7 @@ option{
     border-left: dashed;
     border-right: dashed;
     border-width: 1px;
+    border-color: rgb(60, 60, 60);
 }
 
 #poemCh{
@@ -207,8 +235,13 @@ option{
 }
 
 #selGraph p{
-    padding: 0px;
-    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(255, 255, 255, 0.523);
+    width: 120px;
+    border: dashed;
+    border-width: 1px;
+    color: rgb(113, 113, 113);
 }
 
 .script{

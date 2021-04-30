@@ -170,7 +170,7 @@ let poetsList = function(){
 
             if(data.img == 1) {html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/${data.poetEn}.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
             <p>${data.introduction}</p><p>Source Link: <a href="${data.link}">${data.link}</a></p>`}
-            else {html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/noImage.jpg" height="200px"><h3>${data.born} - ${data.death}</h3>
+            else {html = `<h3>${data.poetEn}</h3><h3>${data.poetCh}</h3><img src="data/photos/noImage.png" height="200px"><h3>${data.born} - ${data.death}</h3>
             <p>${data.introduction}</p><p>Source Link: <a href="${data.link}">${data.link}</a></p>`};
             
             d3.select('.poetsIntro #info').html(html);

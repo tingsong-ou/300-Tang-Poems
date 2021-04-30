@@ -148,7 +148,7 @@ let typesPie = function(){
                     if(d[0] == value) return 800;
                 })
                 .style('font-size', d => {
-                    if(d[0] == value) return '15px';
+                    if(d[0] == value) return '14px';
                 })
             
             d3.selectAll('.typesBarText')
@@ -156,7 +156,7 @@ let typesPie = function(){
                     if(d[0] == value) return 800;
                 })
                 .style('font-size', d => {
-                    if(d[0] == value) return '15px';
+                    if(d[0] == value) return '14px';
                 })
             
             let texts = intro.filter(d => d.categoryEn == value)[0].intro;
@@ -181,7 +181,7 @@ let typesPie = function(){
             
             d3.selectAll('.typesBarText')
                 .style('font-weight', d => {
-                    if(d[0] == value) return 500;
+                    if(d[0] == value) return 800;
                 })
                 .style('font-size', d => {
                     if(d[0] == value) return '14px';
