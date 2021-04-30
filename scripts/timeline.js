@@ -13,6 +13,8 @@ let timeline = function(){
     this._barHeight = null;
     this._dispatch = null;
     this._delay = 0;
+    this._hover = false;
+    this._tooltip = null;
 
     let canvas = null;
 
@@ -87,11 +89,24 @@ let timeline = function(){
         } else return this._dispatch;
     }
 
+    this.hover = function(){
+        if(arguments.length > 0){
+            this._hover = arguments[0];
+            return this;
+        } else return this._hover;
+    }
+
+    this.tooltip = function(){
+        if(arguments.length > 0){
+            this._tooltip = arguments[0];
+            return this;
+        } else return this._tooltip;
+    }
+
     //--------FUNCTIONS--------
 
     //creating visualization
     this.draw = function(){
-
         this._xScale = d3.scaleLinear()
             .domain([d3.min(this._data.map(d => +d.start)), d3.max(this._data.map(d => +d.end))])
             .range([0, this._size.w]);
@@ -105,6 +120,10 @@ let timeline = function(){
             .data(this._data)
             .join('rect')
             .classed('timelineRects', true)
+            .classed('tang', ()=>{
+                if(this._hover) return true;
+                else return false;
+            })
             .attr('x', d => this._xScale(+d.start))
             .attr('y', this._ypos)
             .attr('width', d => this._xScale(+d.end)- this._xScale(+d.start))
@@ -117,6 +136,27 @@ let timeline = function(){
 
         this.yearTag();
         this.periodLabel();
+
+        //tooltip
+        let tooltip = this._tooltip;
+
+        if(this._hover === true){
+
+            d3.selectAll('.tang').on('mouseover', function(e){
+                let info = d3.select(this).data()[0];
+
+                let name = `<p><b>Name:</b> ${info.emperorEn} - ${info.emperorCh}</p>`;
+                let reign = `<p><b>Reign:</b> ${info.start} - ${info.end}</p>`;
+                let templeName = `<p><b>Temple Name:</b> ${info.templeEn} - ${info.templeCh}</p>`;
+
+                tooltip.style('visibility', 'visible')
+                    .style('left', (e.pageX + 20) + 'px')
+                    .style('top', (e.pageY + 20) + 'px')
+                    .html(name+templeName+reign);
+            }).on('mouseout', function(){
+                tooltip.style('visibility', 'hidden')
+            })
+        }
     };
 
     //placing year tag
@@ -178,9 +218,11 @@ let timeline = function(){
             .transition()
             .duration(this._delay)
             .delay(this._delay * 2)
-            .attr('opacity', 1.0)
+            .attr('opacity', 1.0);
     }
 }
+
+
 
 
 /*-------------------------------------------------------*/

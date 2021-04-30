@@ -8,6 +8,11 @@ const t_size = {w: width, h:t_height};
 const margin = {l: 100, t: 30, r: 100, b: 10};
 const yPos = [20, 180];
 const barHeight = 15;
+const t_tooltip = d3.select('#timelineChart')
+    .append('div')
+    .classed('tooltip', true)
+    .style('visibility', 'hidden');
+
 const timelineG = d3.select('#timelineChart')
     .append('svg')
     .attr('width', t_size.w)
@@ -50,8 +55,8 @@ const poetBarsG = d3.select('#poetBars')
 
 
 //Variables for the poem show room (Section 4, poem selector)
-const s_height = 450;
-const s_width = 450;
+const s_height = 410;
+const s_width = 410;
 const s_size = {w: s_width, h: s_height};
 const s_margin = {l: 10, t: 10, r: 10, b: 10};
 const s_dispatch = d3.dispatch('updateChart');
@@ -59,7 +64,8 @@ const s_dispatch = d3.dispatch('updateChart');
 const poemsG = d3.select('#selGraph')
     .append('svg')
     .attr('width', s_size.w)
-    .attr('height', s_size.h);
+    .attr('height', s_size.h)
+    .attr('opacity', 1.0);
 
 
 //--------VISUALIZATION--------
@@ -68,13 +74,15 @@ Promise.all([
     d3.csv('data/timeline-world.csv'),
     d3.csv('data/timeline-tang.csv'),
     d3.csv('data/poets.csv'),
-    d3.csv('data/poems.csv')
+    d3.csv('data/poems.csv'),
+    d3.csv('data/category.csv')
 ]).then(function(data){
 
     let world = data[0];
     let tang = data[1];
     let poets = data[2];
     let poems = data[3];
+    let category = data[4];
 
     poems.forEach(d => {
         d.categoryEn = d.categoryEn.trim();
@@ -105,6 +113,8 @@ Promise.all([
         .ypos(yPos[1])
         .barHeight(barHeight)
         .delay(500)
+        .hover(true)
+        .tooltip(t_tooltip)
         .dispatch(aniDispatch);
 
     let callout = new calloutMark();
@@ -124,6 +134,7 @@ Promise.all([
     let pieChart = new typesPie();
     pieChart.selection(typesG)
         .data(poems)
+        .intro(category)
         .size(p_size)
         .draw();
     
@@ -163,12 +174,33 @@ Promise.all([
     //UPDATING POEMS BY DROPDOWN MENU
     d3.select('#options').on('change', function(){
         let value = d3.select(this).property('value')
-        s_dispatch.call('updateChart', this, value, mode);
+        if(mode != 'poems') s_dispatch.call('updateChart', this, value, mode);
+        else{
+            let poemData = poems.filter(d => d.title == value)[0];
+
+            // //poem html - Chinese
+            let titleCh = `<h3>${poemData.titleCh.trim()}<h3>`;
+            let poetCh = `<p><b>${poemData.poetCh}</b></p>`;
+            let bodyCh = `<p>${poemData.ch.trim()}</p>`;
+
+            //poem html - English
+            let titleEn = `<h3>${poemData.title.trim()}<h3>`;
+            let poetEn = `<p><b>${poemData.poetEn}</b></p>`;
+            let bodyEn = `<p>${poemData.en.trim()}</p>`;
+
+            d3.select('#poemCh')
+                .html(titleCh+poetCh+bodyCh)
+
+            d3.select('#poemEn')
+                .html(titleEn+poetEn+bodyEn)
+        }
     })
 
     d3.selectAll('.mode').on('click', function(){
 
         d3.selectAll('.active').classed('active', false);
+        d3.selectAll('.inactive').attr('visibility', 'hidden');
+        d3.select('.switch').attr('opacity', 1);
         
         let active = d3.select(this);
         active.classed('active', true);
@@ -178,8 +210,41 @@ Promise.all([
 
         let opts = document.getElementById('options');
         let value = opts.options[opts.selectedIndex].value;
+        
+        if(mode != 'poems') s_dispatch.call('updateChart', this, value, mode);
+        else{
+            d3.select('.switch').attr('opacity', 0.3)
 
-        s_dispatch.call('updateChart', this, value, mode);
+            let mask = poemsG.selectAll('.inactive')
+                .data([0])
+                .join('g')
+                .classed('inactive', true)
+                .attr('transform', `translate(${s_size.w/2}, ${s_size.h/2})`)
+            
+            mask.selectAll('.inactive')
+                .data([0])
+                .join('rect')
+                .classed('inactive', true)
+                .classed('mask', true)
+                .attr('x', -225)
+                .attr('y', -225)
+                .attr('width', 450)
+                .attr('height', 450)
+                .attr('opacity', 0)
+                .attr('visibility', 'visible');
+            
+            mask.selectAll('.inactive .info')
+                .data([0])
+                .join('text')
+                .classed('inactive', true)
+                .classed('info', true)
+                .attr('x', 0)
+                .attr('y', 0)
+                .text('NOT AVALIABLE')
+                .attr('font-weight', 800)
+                .attr('text-anchor', 'middle')
+                .attr('visibility', 'visible');
+        }
     })
 
 
@@ -198,8 +263,12 @@ function updateMenu(data, mode='types'){
 
     if(mode == 'types'){
         list = Array.from(new Set(data.map(d => d.categoryEn + ' - ' + d.categoryCh)));
-    } else {
+    } else if (mode == 'poets'){
         list = Array.from(new Set(data.map(d => d.poetEn + ' - ' + d.poetCh)));
+    } else if (mode == 'poems'){
+        list = Array.from(new Set(data.map(d => {
+            if(d) return d.title + ' - ' + d.titleCh;
+        })));
     }
 
     let options = d3.select('#options');

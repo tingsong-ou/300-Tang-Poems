@@ -9,8 +9,11 @@ let typesPie = function(){
     this._outerRadius = 220;
     this._size = null;
     this._colorScale = null;
+    this._intro = null;
+
     let canvas = null;
     let tooltip = null;
+    let intro;
 
     //--------SETTERS--------
     this.data = function(){
@@ -18,6 +21,14 @@ let typesPie = function(){
             this._data = arguments[0];
             return this;
         } else return this_data;
+    }
+
+    this.intro = function(){
+        if(arguments.length > 0){
+            this._intro = arguments[0];
+            intro = this._intro
+            return this;
+        } else return this_intro;
     }
 
     this.selection = function(){
@@ -52,7 +63,6 @@ let typesPie = function(){
 
     //creating visualization
     this.draw = function(){
-        
         //processing data
         this.groupData();
 
@@ -144,8 +154,10 @@ let typesPie = function(){
                     if(d[0] == value) return '15px';
                 })
             
+            let texts = intro.filter(d => d.categoryEn == value)[0].intro;
+
             d3.select('.typesSticker')
-                .html(`<h3>${value}:</h3><p>test test test test test test test test test test test test test test test test test test test test test </p>`)
+                .html(`<h3>${value}:</h3><p>${texts}</p>`)
         });
     }
 
@@ -170,14 +182,16 @@ let typesPie = function(){
                     if(d[0] == value) return '14px';
                 })
             
+            let texts = intro.filter(d => d.categoryEn == value)[0].intro;
+
             d3.select('.typesSticker')
-                .html(`<h3>${value}:</h3><p>test test test test test test test test test test test test test test test test test test test test test </p>`)
+                .html(`<h3>${value}:</h3><p>${texts}</p>`)
         })
     }
 
     //types introduction function
     this.sticker = function(){
         d3.select('.typesSticker')
-            .html('<h3>Type Name:</h3><p>test test test test test test test test test test test test test test test test test test test test test </p>')
+            .html('<h3>Type Name:</h3><p class="hint">Please hover over the cart or text to get further information of each poem type</p>')
     }
 } 

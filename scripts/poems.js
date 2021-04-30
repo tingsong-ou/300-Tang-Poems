@@ -44,6 +44,7 @@ let poemSelector = function(){
                 this.processData(mode);
                 filteredData = filteredData.filter(d => d[0] == value)[0];
                 canvas.selectAll('.leave').remove()
+                this._hover = true;
                 this.draw(mode);
             })
         
@@ -65,7 +66,8 @@ let poemSelector = function(){
 
         if(!canvas){
             canvas = this._selection.append('g')
-            .attr('transform', `translate(${this._size.w/2}, ${this._size.h/2})`);
+                .classed('switch', true)
+                .attr('transform', `translate(${this._size.w/2}, ${this._size.h/2})`);
         }
 
         let branchData;
@@ -77,6 +79,7 @@ let poemSelector = function(){
         xScale = d3.scaleBand()
             .domain(branchData.map(d => d[0]))
             .range([0, 2 * Math.PI]);
+
         
         yScale = d3.scaleSqrt()
             .domain(d3.extent(branchData, d => d[1].length))
@@ -91,7 +94,6 @@ let poemSelector = function(){
             .attr('y1', 0)
             .attr('x2', 0)
             .attr('y2', 0)
-            .attr('stroke', 'black')
             .transition()
             .duration(500)
             .attr('x2', d => Math.cos(xScale(d[0])) * yScale(d[1].length))
@@ -113,7 +115,17 @@ let poemSelector = function(){
             .attr('cx', d => Math.cos(xScale(d[0])) * yScale(d[1].length))
             .attr('cy', d => Math.sin(xScale(d[0])) * yScale(d[1].length));
 
+        canvas.selectAll('.center')
+            .data([0])
+            .join('circle')
+            .classed('center', true)
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('r', 3)
+            .attr('fill', 'black')
+
         this.branchCircleHover();
+        this.initialize();
     }
 
     //data-processing function
@@ -131,6 +143,28 @@ let poemSelector = function(){
                 d.splice(1, 0, poetCh);
             })
         }
+    }
+
+    //initialize show room function
+    this.initialize = function(){
+        //Drinking Alone Under the Moon
+        let poemData = this._data.filter(d => d.title == 'Drinking Alone Under the Moon')[0];
+
+        //poem html - Chinese
+        let titleCh = `<h3>${poemData.titleCh.trim()}<h3>`;
+        let poetCh = `<p><b>${poemData.poetCh}</b></p>`;
+        let bodyCh = `<p>${poemData.ch.trim()}</p>`;
+
+        //poem html - English
+        let titleEn = `<h3>${poemData.title.trim()}<h3>`;
+        let poetEn = `<p><b>${poemData.poetEn}</b></p>`;
+        let bodyEn = `<p>${poemData.en.trim()}</p>`;
+
+        d3.select('#poemCh')
+            .html(titleCh+poetCh+bodyCh)
+
+        d3.select('#poemEn')
+            .html(titleEn+poetEn+bodyEn)
     }
 
     //interactive(hover) function
@@ -202,6 +236,16 @@ let poemSelector = function(){
                         .attr('stroke-width', 1)
                         .attr('fill', 'white')
                 })
+
+            //legend
+            let script = canvas.selectAll('.script')
+                .data([leafData[0]])
+                .join('text')
+                .classed('script', true)
+                .attr('x', 0)
+                .attr('y', 200)
+                .attr('text-anchor', 'middle')
+                .text(d => d)
             
             //poping up selected poems
             d3.selectAll('.poemCircle').on('mouseover', function(e){
@@ -229,7 +273,7 @@ let poemSelector = function(){
                 d3.select('#poemEn')
                     .html(titleEn+poetEn+bodyEn)
             });
-            
+
             //polar coordinate functions
             function xCoord(i, r) {
                 return Math.cos(radians + leavesScaleX(i) + leavesScaleX.bandwidth()/2) * r;

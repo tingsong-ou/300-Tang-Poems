@@ -1,3 +1,7 @@
+:root{
+    --hintColor: rgb(189, 52, 52);
+}
+
 html{
     text-align: center;
     width: 90%;
@@ -19,7 +23,7 @@ p{
 
 a{
     text-decoration: none;
-    color: rgb(174, 51, 51);
+    color: var(--hintColor);
 }
 
 button{
@@ -36,6 +40,10 @@ button{
 
 }
 
+.hint{
+    color:  var(--hintColor);
+}
+
 
 
 .timelineRects{
@@ -48,13 +56,28 @@ button{
     font-size: 13px;
 }
 
+.tooltip{
+    position: absolute;
+    background: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.tooltip p{
+    margin: 0px;
+    font-size: 13px;
+    text-align: left;
+}
+
 .calloutMark{
-    stroke: red;
+    stroke:  var(--hintColor);
     stroke-width: 3px;
 }
 
 .calloutLine{
-    stroke: red;
+    stroke:  var(--hintColor);
 }
 
 .periodLabel{
@@ -84,9 +107,15 @@ button{
 
 
 .typesSticker{
-    padding-top: 40px;
+    padding-top: 60px;
     padding-right: 40px;
     grid-area: sticker;
+    text-align:left;
+}
+
+.typesSticker > p{
+    white-space: pre-wrap;
+    font-size: 14px;
 }
 
 
@@ -142,6 +171,7 @@ button{
 #options{
     margin-top: 5px;
     margin-bottom: 50px;
+    max-width: 500px;
 }
 
 option{
@@ -176,4 +206,9 @@ option{
 #poemCh p{
     font-size: 14px;
     font-weight: 200;
+}
+
+#selGraph p{
+    padding: 0px;
+    margin: 0px;
 }
