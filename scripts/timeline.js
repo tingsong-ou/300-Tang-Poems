@@ -128,6 +128,10 @@ let timeline = function(){
             .attr('y', this._ypos)
             .attr('width', d => this._xScale(+d.end)- this._xScale(+d.start))
             .attr('height', 0)
+            .attr('fill', (d,i) => {
+                if(i%2 == 0) return colorPalatte[7];
+                else return 'rgba(255, 255, 255, 0.482)';
+            })
             .transition()
             .duration(this._delay)
             .delay(this._delay * 2)

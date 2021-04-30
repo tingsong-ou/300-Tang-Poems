@@ -112,6 +112,10 @@ let poetsList = function(){
             .attr('y', d => yScale(d.poetEn))
             .attr('width', 10)
             .attr('height', yScale.bandwidth())
+            .attr('fill', d =>{
+                if (d.poetEn == 'DU Qiuniang') return colorPalatte[0];
+                else return colorPalatte[6];
+            })
             .transition()
             .duration(500)
             .attr('x', d => xScale(+d.born))

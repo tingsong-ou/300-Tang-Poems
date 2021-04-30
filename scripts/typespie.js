@@ -78,6 +78,10 @@ let typesPie = function(){
             .domain(this._data.map(d => d[0]))
             .range([-10, 220]);
         
+        let colorScale = d3.scaleOrdinal()
+            .domain(this._data.map(d => d[0]))
+            .range(colorPalatte)
+
         let arc = d3.arc()
             .innerRadius(d => yScale(0))
             .outerRadius(d => yScale(d[2].length))
@@ -96,6 +100,7 @@ let typesPie = function(){
             .call(g => g.append('path')
                 .classed('typesBar', true)
                 .attr('d', arc))
+                .attr('fill', d => colorScale(d[0]))
             .call(g => g.append('text')
                 .classed('typesBarText', true)
                 .attr('x', d => (yScale(d[2].length) + 12) * Math.cos(xScale(d[0]) + xScale.bandwidth() / 2 - Math.PI / 2))
@@ -176,7 +181,7 @@ let typesPie = function(){
             
             d3.selectAll('.typesBarText')
                 .style('font-weight', d => {
-                    if(d[0] == value) return 800;
+                    if(d[0] == value) return 500;
                 })
                 .style('font-size', d => {
                     if(d[0] == value) return '14px';

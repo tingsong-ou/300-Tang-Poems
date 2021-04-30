@@ -93,7 +93,7 @@ let poetBar = function(){
             .attr('y', (d, i) => yScale(i))
             .attr('width', 0)
             .attr('height', yScale.bandwidth())
-            .attr('stroke', 'black')
+            .attr('fill', 'rgba(255, 255, 255, 0.3)')
             .transition()
             .duration(200)
             .attr('width', d => xScale(d[1].length));

@@ -96,8 +96,8 @@ let poemSelector = function(){
             .attr('y2', 0)
             .transition()
             .duration(500)
-            .attr('x2', d => Math.cos(xScale(d[0])) * yScale(d[1].length))
-            .attr('y2', d => Math.sin(xScale(d[0])) * yScale(d[1].length));
+            .attr('x2', d => Math.cos(xScale(d[0])) * (yScale(d[1].length)-7))
+            .attr('y2', d => Math.sin(xScale(d[0])) * (yScale(d[1].length)-7));
 
         let branchCr = canvas.selectAll('.branchCircle')
             .data(branchData)
@@ -106,7 +106,7 @@ let poemSelector = function(){
             .attr('cx', 0)
             .attr('cy', 0)
             .attr('r', 2)
-            .attr('fill', 'white')
+            .attr('fill', colorPalatte[0])
             .attr('stroke', 'black')
             .attr('stroke-width', 1)
             .transition()
@@ -215,9 +215,9 @@ let poemSelector = function(){
                         .attr('y2', (d, i) => yCoord(i, 7))
                         .transition()
                         .duration(300)
-                        .attr('x2', (d, i) => xCoord(i, 80))
-                        .attr('y2', (d, i) => yCoord(i, 80))
-                        .attr('stroke', 'steelblue')
+                        .attr('x2', (d, i) => xCoord(i, 72))
+                        .attr('y2', (d, i) => yCoord(i, 72))
+                        .attr('stroke', 'black')
                 })
                 .call(g => {
                     g.selectAll('.poemCircle')
@@ -232,9 +232,9 @@ let poemSelector = function(){
                         .attr('r', 8)
                         .attr('cx', (d, i) => xCoord(i, 80))
                         .attr('cy', (d, i) => yCoord(i, 80))
-                        .attr('stroke', 'steelblue')
+                        .attr('stroke', 'black')
                         .attr('stroke-width', 1)
-                        .attr('fill', 'white')
+                        .attr('fill', colorPalatte[2])
                 })
 
             //legend

@@ -1,5 +1,5 @@
 :root{
-    --hintColor: rgb(189, 52, 52);
+    --hintColor: rgb(235,83,36);
 }
 
 html{
@@ -9,12 +9,16 @@ html{
     min-width: 1200px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 50px;
+    margin-top: 120px;
     background-color: rgb(238, 231, 223);
+    font-family: "Source Serif Pro",Iowan Old Style,Apple Garamond,Palatino Linotype,Times New Roman,"Droid Serif",Times,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
 
 h2{
-    margin-top: 50px;
+    padding-top: 50px;
+    border-top: dashed;
+    border-color: rgb(181, 181, 181);
+    border-width: 1px;
 }
 
 p{
@@ -48,7 +52,6 @@ button{
 
 .timelineRects{
     stroke: black;
-    fill: rgba(255, 255, 255, 0.482);
 }
 
 .yearTag{
@@ -93,12 +96,12 @@ button{
 }
 
 .typesBar{
-    fill:rgba(255, 255, 255, 0.461);
-    stroke: black;
+    stroke: rgb(63, 63, 63);
 }
 
 .typesBarText{
     text-anchor: middle;
+    fill:black
 }
 
 .typesLabel{
@@ -107,7 +110,7 @@ button{
 
 
 .typesSticker{
-    padding-top: 60px;
+    padding-top: 90px;
     padding-right: 40px;
     grid-area: sticker;
     text-align:left;
@@ -135,8 +138,7 @@ button{
 }
 
 .poetsRect{
-    fill: rgba(255, 255, 255, 0.386);
-    stroke: black;
+    stroke: rgb(63, 63, 63);
 }
 
 .poetsName{
@@ -154,7 +156,7 @@ button{
     transform: translate(0, -3px)
 }
 
-.branchLine{
+.branchLine, .poemLine{
     stroke:rgb(155, 155, 155);
     stroke-dasharray: 5 2;
 }
@@ -176,10 +178,6 @@ button{
 
 option{
     text-anchor: middle;
-}
-
-.poemLine{
-    stroke-dasharray: 5 2;
 }
 
 #poemCh, #poemEn{
@@ -211,4 +209,8 @@ option{
 #selGraph p{
     padding: 0px;
     margin: 0px;
+}
+
+.script{
+    text-decoration: underline;
 }

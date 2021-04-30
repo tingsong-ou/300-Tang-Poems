@@ -1,3 +1,18 @@
+const colorOpacity = 0.8;
+const colorPalatte = [
+    `rgba(235,83,36, ${colorOpacity})`, //Jasper Red
+    `rgba(245,142,132, ${colorOpacity})`,//Coral Red
+    `rgba(253,191,104, ${colorOpacity})`,//Cream Yellow
+    `rgba(252,199,155, ${colorOpacity})`,//Light Pinkish Cinnamon
+    `rgba(193,196,148, ${colorOpacity})`,//Olive Buff
+    `rgba(137,177,134, ${colorOpacity})`,//Chromium Buff
+    `rgba(91,130,179, ${colorOpacity})`,//Olympic Blue
+    `rgba(165,200,209, ${colorOpacity})`,//Light Glaucous Blue
+    `rgba(185,132,175, ${colorOpacity})`,//Lilac
+    `rgba(181,176,216, ${colorOpacity})`,//Grayish Lavender
+    `rgba(245,142,132, ${colorOpacity})`,//Hermosa Pink
+]
+
 //Animation trigger
 const aniDispatch = d3.dispatch('expandBars', 'expandMarks', 'expandPoets');
 
