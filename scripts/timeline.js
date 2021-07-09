@@ -126,6 +126,8 @@ let timeline = function(){
             })
             .attr('x', d => this._xScale(+d.start))
             .attr('y', this._ypos)
+            .attr('rx', 4)
+            .attr('ry', 4)
             .attr('width', d => this._xScale(+d.end)- this._xScale(+d.start))
             .attr('height', 0)
             .attr('fill', (d,i) => {

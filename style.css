@@ -2,6 +2,11 @@
     --hintColor: rgb(235,83,36);
 }
 
+::selection{
+    color:white;
+    background: rgb(82, 82, 82);
+}
+
 html{
     text-align: center;
     width: 90%;
@@ -77,7 +82,7 @@ button{
 
 
 .timelineRects{
-    stroke: black;
+    stroke: grey;
 }
 
 .yearTag{
@@ -87,11 +92,12 @@ button{
 
 .tooltip{
     position: absolute;
-    background: white;
+    background-color: rgba(255, 255, 255, 0.7);
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 3px;
     padding-bottom: 3px;
+    border-radius: 8px;
 }
 
 .tooltip p{

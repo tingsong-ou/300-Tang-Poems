@@ -91,6 +91,8 @@ let poetBar = function(){
             .classed('typesBar', true)
             .attr('x', 0)
             .attr('y', (d, i) => yScale(i))
+            .attr('rx', 4)
+            .attr('ry', 4)
             .attr('width', 0)
             .attr('height', yScale.bandwidth())
             .attr('fill', 'rgba(255, 255, 255, 0.3)')

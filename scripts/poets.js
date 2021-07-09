@@ -110,6 +110,8 @@ let poetsList = function(){
             .classed('poetsRect', true)
             .attr('x', 0)
             .attr('y', d => yScale(d.poetEn))
+            .attr('rx', 3)
+            .attr('ry', 3)
             .attr('width', 10)
             .attr('height', yScale.bandwidth())
             .attr('fill', d =>{
