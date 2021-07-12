@@ -198,7 +198,7 @@ button{
     grid-template-columns: 31% 38% 31%;
     grid-template-rows: auto;
     grid-template-areas: "graph poemCh poemEn";
-    padding-bottom: 230px;
+    padding-bottom: 150px;
     column-gap: 20px;
 }
 
@@ -216,8 +216,11 @@ option{
 #poemCh, #poemEn{
     white-space: pre-wrap;
     text-anchor: middle;
-    padding:20px
+    padding: 20px;
+    height: 500px;
+    overflow-y: scroll;
 }
+
 
 #poemEn{
     border-left: dashed;
@@ -227,7 +230,7 @@ option{
 }
 
 #poemCh{
-    padding-right: 30%;
+    padding-right: 20%;
 }
 
 #poemEn p{
